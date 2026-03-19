@@ -11,7 +11,7 @@ from reportlab.pdfgen import canvas
 
 ROOT = Path(__file__).resolve().parent
 SOURCE_PDFS = [ROOT / "Cours_DevOps.pdf", ROOT / "PPT_DevOps.pdf"]
-OUTPUT_PDF = ROOT / "Examen_Controle_DevOps.pdf"
+OUTPUT_PDF = ROOT / "Examen_Controle_DevOps_V2.pdf"
 
 
 def extract_text(pdf_paths: Iterable[Path]) -> str:
@@ -51,60 +51,85 @@ def draw_multiline_text(pdf: canvas.Canvas, lines: list[str], x: float, y: float
 def build_exam(topics: list[str]) -> tuple[list[str], list[str]]:
     topics_text = ", ".join(topics)
     exam_lines = [
-        "EXAMEN DE CONTROLE DE CONNAISSANCES - DEVOPS",
+        "EXAMEN DE CONTROLE DE CONNAISSANCES - DEVOPS (VERSION 2)",
+        "",
+        "Nom & Prénom: ______________________    Classe: ________    Date: __/__/____",
         "",
         "Instructions:",
         "- Durée: 1h30",
         "- Répondez de manière concise et argumentée.",
+        "- Cette version 2 combine QCM, questions ouvertes et cas pratique.",
         "- L'examen couvre les notions du cours Cours_DevOps.pdf et PPT_DevOps.pdf.",
         f"- Thèmes détectés automatiquement depuis les supports: {topics_text}.",
         "",
-        "PARTIE A - Questions de cours (10 points)",
-        "1) Definir DevOps et expliquer en quoi il depasse un simple choix d'outils.",
-        "2) Expliquer l'origine de DevOps: quels problemes organisationnels cherchait-on a resoudre?",
-        "3) Donner trois avantages concrets de l'approche DevOps pour une entreprise.",
-        "4) Decrire le role de la collaboration Dev/Ops dans la reduction des incidents en production.",
+        "PARTIE A - QCM (10 points, 2 points par question)",
+        "1) Le DevOps est avant tout:",
+        "   A. Un outil de déploiement   B. Une culture de collaboration Dev/Ops",
+        "   C. Un type de base de données D. Une méthode sans automatisation",
+        "2) La CI (Intégration Continue) consiste principalement à:",
+        "   A. Déployer en prod sans tests   B. Intégrer et tester fréquemment",
+        "   C. Faire uniquement du monitoring D. Supprimer les revues de code",
+        "3) Docker permet principalement:",
+        "   A. De remplacer Git   B. D'orchestrer des clusters seul",
+        "   C. De packager une app et ses dépendances dans un conteneur   D. D'écrire des playbooks",
+        "4) Kubernetes est utilisé surtout pour:",
+        "   A. Orchestrer les conteneurs   B. Gérer les tickets",
+        "   C. Compresser les images      D. Remplacer les tests",
+        "5) Ansible sert principalement à:",
+        "   A. Gérer la configuration par code   B. Écrire du front-end",
+        "   C. Faire du versioning Git            D. Simuler des bases SQL",
         "",
-        "PARTIE B - CI/CD et automatisation (10 points)",
-        "5) Différencier Intégration Continue (CI), Livraison Continue (CD) et Déploiement Continu.",
-        "6) Expliquer le role d'un pipeline Jenkins et proposer des etapes typiques.",
-        "7) Donner deux bonnes pratiques pour fiabiliser un pipeline CI/CD.",
-        "8) Pourquoi l'automatisation des tests est-elle essentielle en DevOps?",
+        "PARTIE B - Questions ouvertes (12 points, 4 points par question)",
+        "6) Différencier CI, CD (livraison continue) et déploiement continu avec un exemple concret.",
+        "7) Proposer un pipeline Jenkins type (étapes + objectif de chaque étape).",
+        "8) Donner trois bonnes pratiques de fiabilité/sécurité dans un pipeline CI/CD.",
         "",
-        "PARTIE C - Conteneurs, orchestration et configuration (10 points)",
-        "9) Comparer conteneur Docker et machine virtuelle (VM): 2 differences majeures.",
-        "10) Expliquer l'interet de Docker dans une chaine DevOps.",
-        "11) Citer les concepts clés de Kubernetes utiles pour un déploiement applicatif.",
-        "12) Expliquer comment Ansible aide a industrialiser la gestion de configuration.",
+        "PARTIE C - Conteneurs, orchestration et configuration (8 points)",
+        "9) Comparer conteneur Docker et machine virtuelle (VM): 3 différences majeures.",
+        "10) Citer et expliquer 4 concepts Kubernetes utiles en production.",
+        "11) Expliquer comment Ansible industrialise la gestion de configuration.",
         "",
-        "PARTIE D - Cas pratique (10 points)",
-        "13) Vous devez livrer une application web rapidement sans dégrader la stabilité.",
-        "    Proposer une demarche DevOps complete: de la phase de dev jusqu'au suivi en production.",
-        "    Votre reponse doit mentionner: pipeline, tests, conteneurisation, deploiement, monitoring.",
+        "PARTIE D - Cas pratique intégré (10 points)",
+        "12) Contexte: une application web est livrée avec des incidents fréquents en production.",
+        "    Proposez une démarche DevOps complète de la conception au run.",
+        "    Exigences minimales dans votre réponse:",
+        "    - workflow Git + revue de code",
+        "    - pipeline CI/CD avec quality gates",
+        "    - conteneurisation Docker",
+        "    - déploiement progressif Kubernetes",
+        "    - monitoring, alerting, rollback et amélioration continue",
+        "",
+        "Barème global: /40",
     ]
 
     correction_lines = [
-        "CORRECTION (elements attendus)",
+        "CORRECTION (VERSION 2 - ÉLÉMENTS ATTENDUS)",
         "",
-        "1) DevOps: culture + pratiques + automatisation pour rapprocher Dev et Ops.",
-        "2) Origine: résoudre les silos, conflits 'ça marche chez moi', lenteur et risque de déploiement.",
-        "3) Exemples d'avantages: cycle de livraison plus rapide, meilleure fiabilité, feedback continu.",
-        "4) Collaboration: responsabilité partagée, meilleure communication, incidents réduits.",
-        "5) CI = integration/tests frequents; CD = logiciel toujours livrable;",
-        "   Deploiement continu = mise en production automatique apres validation.",
-        "6) Jenkins pipeline: build -> tests -> qualite -> package -> deploiement (staging/prod).",
-        "7) Bonnes pratiques: pipeline as code, tests automatisés, contrôle de version, rollback.",
-        "8) Les tests automatisés détectent vite les régressions et sécurisent les livraisons fréquentes.",
-        "9) Docker vs VM: conteneur plus léger/rapide, partage le noyau OS, démarrage plus court.",
-        "10) Docker: reproductibilité des environnements, portabilité, déploiement cohérent.",
-        "11) Kubernetes: pods, deployments, services, scaling, auto-healing, rolling updates.",
-        "12) Ansible: configuration as code via playbooks, idempotence, standardisation, traçabilité.",
-        "13) Cas pratique attendu:",
-        "   - Branching + revue de code + tests unitaires/integration",
-        "   - Pipeline CI/CD Jenkins avec quality gate",
+        "QCM:",
+        "1) B  2) B  3) C  4) A  5) A",
+        "",
+        "Questions ouvertes:",
+        "6) CI: intégration + tests fréquents; CD: artefact toujours déployable;",
+        "   déploiement continu: mise en production automatique après validation.",
+        "7) Exemple pipeline: lint -> tests -> build -> scan sécurité -> package -> deploy staging -> deploy prod.",
+        "8) Bonnes pratiques attendues (3 minimum):",
+        "   tests automatisés, quality gates, scans sécurité, pipeline as code, secrets management, rollback.",
+        "",
+        "Conteneurs / orchestration / config:",
+        "9) Docker vs VM: légèreté, vitesse de démarrage, partage noyau, portabilité, densité supérieure.",
+        "10) Concepts Kubernetes attendus (4): Pods, Deployments, Services, Ingress, HPA, ConfigMaps/Secrets.",
+        "11) Ansible: playbooks déclaratifs, idempotence, standardisation, reproductibilité, traçabilité.",
+        "",
+        "Cas pratique:",
+        "12) Réponse attendue:",
+        "   - Branching + revue de code + tests unitaires/intégration",
+        "   - Pipeline CI/CD Jenkins avec quality gates",
         "   - Build image Docker versionnée",
-        "   - Deploiement Kubernetes progressif (staging puis production)",
+        "   - Déploiement Kubernetes progressif (staging -> production)",
         "   - Supervision/monitoring + alerting + boucle d'amélioration continue",
+        "   - Stratégie de rollback et post-mortem des incidents",
+        "",
+        "Notation suggérée: QCM /10, Ouvertes /12, Conteneurs/K8s/Ansible /8, Cas pratique /10.",
     ]
     return exam_lines, correction_lines
 
@@ -115,7 +140,7 @@ def generate_exam_pdf() -> None:
     exam_lines, correction_lines = build_exam(topics)
 
     pdf = canvas.Canvas(str(OUTPUT_PDF), pagesize=A4)
-    pdf.setTitle("Examen de controle de connaissances - DevOps")
+    pdf.setTitle("Examen de controle de connaissances - DevOps - Version 2")
     pdf.setAuthor("Generation automatique depuis supports DevOps")
     pdf.setFont("Helvetica", 11)
 
